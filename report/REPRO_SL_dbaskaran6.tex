@@ -1,0 +1,186 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage{xcolor}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue,
+    breaklinks=true,
+}
+
+\newcommand{\code}[1]{\texttt{#1}}
+
+\title{Reproducibility Sheet \\ \large REPRO\_SL\_dbaskaran6}
+\author{Divyesh Baskaran}
+\date{}
+
+\begin{document}
+\sloppy
+\maketitle
+
+\section*{(a) Overleaf project (edit link)}
+
+\noindent Edit link:
+\begin{quote}
+\small\raggedright
+\href{https://www.overleaf.com/project/6ab951102cb870b10bb0a332/share#4f7919079198a96ed2ec65e2cd54467ba5ea4b4a2881e871}{%
+\texttt{https://www.overleaf.com/project/6ab951\allowbreak 102cb8\allowbreak 70b10b\allowbreak b0a332/share\#4f7919\allowbreak 079198\allowbreak a96ed2\allowbreak ec65e2\allowbreak cd5446\allowbreak 7ba5ea\allowbreak 4b4a28\allowbreak 81e871}}
+\end{quote}
+
+\section*{(b) GitHub commit hash}
+
+Final push commit (\code{master}, matches \code{origin/master}):
+
+\begin{verbatim}
+3226bd38087c945ec11f5510142e4d18151f366a
+\end{verbatim}
+
+Commit message: \code{Final SL Push}
+
+\section*{(c) Exact run instructions (standard Linux machine)}
+
+\subsection*{Environment setup}
+
+\begin{verbatim}
+git clone https://github.gatech.edu/gt-omscs-ml/cs-7641-2026-fall-dbaskaran6.git
+cd cs-7641-2026-fall-dbaskaran6/sl-report
+
+python3.12 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+\end{verbatim}
+
+\code{requirements.txt} (unpinned) resolves, at time of submission, to:
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+Package & Version \\
+\midrule
+Python & 3.12.13 \\
+numpy & 2.5.3 \\
+pandas & 3.0.6 \\
+scikit-learn & 1.9.1 \\
+matplotlib & 3.11.2 \\
+torch & 2.14.0 \\
+jupyter & (latest resolved by pip at install time) \\
+nbformat & (latest resolved by pip at install time) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Data path}
+
+Place the raw BRFSS CSV at:
+
+\begin{verbatim}
+sl-report/data/diabetes_012_health_indicators_BRFSS2015.csv
+\end{verbatim}
+
+(source: \code{Diabetes Health Indicators BRFSS 2015.zip} --- unzip into \code{sl-report/data/})
+
+\subsection*{Commands (run in order, from \code{sl-report/})}
+
+\begin{verbatim}
+jupyter nbconvert --to notebook --execute --inplace 01_eda.ipynb
+jupyter nbconvert --to notebook --execute --inplace harness.ipynb
+jupyter nbconvert --to notebook --execute --inplace 02_decision_tree.ipynb
+jupyter nbconvert --to notebook --execute --inplace 03_knn.ipynb
+jupyter nbconvert --to notebook --execute --inplace 04_svm.ipynb
+jupyter nbconvert --to notebook --execute --inplace 05_nn_sklearn.ipynb
+jupyter nbconvert --to notebook --execute --inplace 06_nn_pytorch.ipynb
+\end{verbatim}
+
+\code{01\_eda.ipynb} writes \code{data/sample\_20k.csv} and \code{results/sample\_row\_indices.npy}.
+\code{harness.ipynb} writes \code{results/train\_idx.npy} and \code{results/test\_idx.npy}, which every algorithm notebook loads via \code{common.py::load\_split()} to reconstruct the identical 80/20 train/test split.
+
+\subsection*{Random seeds}
+
+A single seed is used everywhere for determinism: \code{SEED = 42}, set in:
+\begin{itemize}
+    \item \code{01\_eda.ipynb} (stratified 20k sampling, \code{train\_test\_split(..., random\_state=SEED)})
+    \item \code{harness.ipynb} (train/test split, \code{StratifiedKFold(..., random\_state=SEED)})
+    \item \code{common.py} (\code{CV = StratifiedKFold(n\_splits=5, shuffle=True, random\_state=SEED)}, shared by every algorithm notebook)
+\end{itemize}
+
+\section*{(d) EDA summaries}
+
+\subsection*{Full data}
+$n = 253{,}680$ rows, 22 columns, all \code{float64}, 0 missing values, 23{,}899 exact duplicate rows kept (see ``sampling procedure'' below for why).
+
+\code{GenHlth} target distribution (1 = Excellent \ldots\ 5 = Poor):
+
+\begin{center}
+\begin{tabular}{lrr}
+\toprule
+Class & Count & Share (\%) \\
+\midrule
+1 & 45,299 & 17.86 \\
+2 & 89,084 & 35.12 \\
+3 & 75,646 & 29.82 \\
+4 & 31,570 & 12.44 \\
+5 & 12,081 & 4.76 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Feature groups (21 predictors, \code{GenHlth} excluded):
+\begin{itemize}
+    \item \textbf{binary (14):} HighBP, HighChol, CholCheck, Smoker, Stroke, HeartDiseaseorAttack, PhysActivity, Fruits, Veggies, HvyAlcoholConsump, AnyHealthcare, NoDocbcCost, DiffWalk, Sex
+    \item \textbf{count (2):} MentHlth, PhysHlth (days out of last 30, bounded 0--30, right-skewed)
+    \item \textbf{numeric (1):} BMI
+    \item \textbf{ordinal (3):} Age, Education, Income
+    \item \textbf{other (1):} Diabetes\_012 (treated as ordinal: 0 = no diabetes, 1 = prediabetes, 2 = diabetes)
+\end{itemize}
+
+\subsection*{Sampled data}
+$n = 20{,}000$ rows, stratified on \code{GenHlth}.
+
+\begin{center}
+\begin{tabular}{lrrrr}
+\toprule
+Class & Full share (\%) & Sample count & Sample share (\%) & Abs.\ diff (pp) \\
+\midrule
+1 & 17.86 & 3,571 & 17.85 & 0.01 \\
+2 & 35.12 & 7,023 & 35.12 & 0.00 \\
+3 & 29.82 & 5,964 & 29.82 & 0.00 \\
+4 & 12.44 & 2,489 & 12.44 & 0.00 \\
+5 & 4.76  & 953   & 4.76  & 0.00 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Max shift in any feature's mean, full data vs.\ sample (top 5, all negligible):
+
+\begin{center}
+\begin{tabular}{lr}
+\toprule
+Feature & Abs.\ mean shift \\
+\midrule
+Age & 0.0365 \\
+PhysHlth & 0.0350 \\
+Income & 0.0186 \\
+BMI & 0.0135 \\
+MentHlth & 0.0064 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Rarest class after sampling is class 5 (953 rows); projected after an 80/20 split: 762 train / 191 test rows --- enough to get a stable per-class F1 estimate.
+
+\section*{(e) Sampling procedure}
+
+\begin{enumerate}
+    \item Load the full BRFSS 2015 CSV (253,680 rows, 22 columns, \code{float64}, 0 missing values). 23,899 exact duplicate rows are \textbf{kept} --- dropping them would disproportionately strip the rarer \code{GenHlth} classes (1--2), which is exactly the distortion stratification is meant to prevent.
+    \item Draw a stratified sample of \code{N\_SAMPLE = 20,000} rows using \code{sklearn.model\_selection.train\_test\_split(idx\_all, train\_size=20\_000, stratify=df["GenHlth"], random\_state=42)}, stratifying on the \code{GenHlth} target so each class keeps its full-data proportion by construction.
+    \item Sort the sampled indices and re-index (\code{reset\_index(drop=True)}) before saving to \code{data/sample\_20k.csv}; the raw (unsorted) indices are also saved to \code{results/sample\_row\_indices.npy} for traceability back to the full dataset.
+    \item Validate the sample two ways: (i) side-by-side full-vs-sample class-proportion table (max abs.\ diff 0.01 pp, see table above), and (ii) max shift in any feature's mean, full data vs.\ sample (max 0.0365, on \code{Age}), as a compact check that sampling didn't distort feature relationships.
+    \item This \code{data/sample\_20k.csv} is the single input to \code{harness.ipynb}, which performs one further stratified 80/20 train/test split (\code{test\_size=0.20, stratify=y, random\_state=42}) --- touched exactly once per model, at final evaluation only.
+\end{enumerate}
+
+\end{document}

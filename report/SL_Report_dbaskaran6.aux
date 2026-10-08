@@ -1,0 +1,72 @@
+\relax 
+\@writefile{toc}{\contentsline {section}{\numberline {I}Introduction}{1}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {II}Exploratory Data Analysis}{1}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-A}}Dataset}{1}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-B}}Exploratory Data Analysis}{1}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces Full-data class distribution}}{1}{}\protected@file@percent }
+\newlabel{tab:full-dist}{{I}{1}{}{table.1}{}}
+\citation{he2009}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Class-conditional distributions of \texttt  {PhysHlth}, \texttt  {BMI}, and \texttt  {Income} across \texttt  {GenHlth} classes 1--5. \texttt  {PhysHlth} shows a threshold-like jump at classes 4--5; \texttt  {Income} shifts more smoothly with overlapping adjacent classes.}}{2}{}\protected@file@percent }
+\newlabel{fig:class-conditional}{{1}{2}{}{figure.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-C}}Sampling Design}{2}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Full vs.\ sampled class distribution}}{2}{}\protected@file@percent }
+\newlabel{tab:sample-dist}{{II}{2}{}{table.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Full-data vs.\ sampled \texttt  {GenHlth} class distribution ($n=253{,}680$ full, $n=20{,}000$ sample).}}{2}{}\protected@file@percent }
+\newlabel{fig:class-dist}{{2}{2}{}{figure.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-D}}Hypothesis}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {III}Methodology}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-A}}Training vs. Test Split and Preprocessing}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-B}}Tuning Protocol}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-C}}Leakage / Evaluation Debug}{2}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {III}{\ignorespaces Sanity baselines on the held out test set}}{3}{}\protected@file@percent }
+\newlabel{tab:baselines}{{III}{3}{}{table.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-D}}Hardware and Environment}{3}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {IV}Algorithm Results}{3}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-A}}Decision Tree}{3}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Decision Tree model complexity curve (left, Macro F1 vs.\ \texttt  {max\_depth}, peaking at depth 6) and learning curve at the unpruned setting (right). The train and validation gap persists across all training sizes, indicating high variance rather than insufficient data.}}{3}{}\protected@file@percent }
+\newlabel{fig:dt-complexity}{{3}{3}{}{figure.3}{}}
+\newlabel{fig:dt-learning}{{3}{3}{}{figure.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-B}}kNN}{3}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces kNN model complexity curve (left, Macro F1 vs.\ $k$, peaking at $k=21$) and learning curve at $k=5$ (right). Unlike the Decision Tree, validation performance improves with more training data.}}{3}{}\protected@file@percent }
+\newlabel{fig:knn-complexity}{{4}{3}{}{figure.4}{}}
+\newlabel{fig:knn-learning}{{4}{3}{}{figure.4}{}}
+\citation{cortes1995}
+\citation{cortes1995}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-C}}SVM}{4}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Linear SVM model complexity curve (left, Macro F1 vs.\ $C$, plateauing past $C=0.1$) and RBF SVM model complexity curve (right, Macro F1 vs.\ $\gamma $ at $C=1$, peaking at $\gamma =0.1$ then collapsing as training performance keeps rising).}}{4}{}\protected@file@percent }
+\newlabel{fig:svm-linear}{{5}{4}{}{figure.5}{}}
+\newlabel{fig:svm-rbf}{{5}{4}{}{figure.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces RBF SVM ($C=1$, $\gamma =0.1$) learning curve. Validation performance is still rising at the largest training size.}}{4}{}\protected@file@percent }
+\newlabel{fig:svm-learning}{{6}{4}{}{figure.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-D}}Neural Networks}{4}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {IV-D}1}scikit-learn MLP}{5}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces scikit-learn MLP model complexity curve (left, Macro F1 vs.\ hidden layer width, peaking at width 8) and learning curve at width 32 (right). Training and validation scores converge as data grows.}}{5}{}\protected@file@percent }
+\newlabel{fig:nn-sk-complexity}{{7}{5}{}{figure.7}{}}
+\newlabel{fig:nn-sk-learning}{{7}{5}{}{figure.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces scikit-learn MLP epoch curve (final architecture). Training loss decreases smoothly. Validation Macro F1 is still rising at epoch 150.}}{5}{}\protected@file@percent }
+\newlabel{fig:nn-sk-epoch}{{8}{5}{}{figure.8}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {IV-D}2}PyTorch MLP}{5}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces PyTorch MLP model complexity curve (left, Macro F1 vs.\ hidden layer width, peaking at width 64) and learning curve at width 32 (right), measured on a single validation split.}}{5}{}\protected@file@percent }
+\newlabel{fig:nn-pt-complexity}{{9}{5}{}{figure.9}{}}
+\newlabel{fig:nn-pt-learning}{{9}{5}{}{figure.9}{}}
+\citation{he2009}
+\@writefile{lot}{\contentsline {table}{\numberline {IV}{\ignorespaces PyTorch MLP confusion matrix on the held out test set}}{6}{}\protected@file@percent }
+\newlabel{tab:pytorch-confusion}{{IV}{6}{}{table.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {V}{\ignorespaces PyTorch MLP per class precision, recall, and F1}}{6}{}\protected@file@percent }
+\newlabel{tab:pytorch-perclass}{{V}{6}{}{table.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces PyTorch MLP epoch curve (final architecture). Validation Macro F1 peaks at epoch 33 (0.450) then degrades to 0.392 by epoch 150, unlike scikit-learn's still rising curve.}}{6}{}\protected@file@percent }
+\newlabel{fig:nn-pt-epoch}{{10}{6}{}{figure.10}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {IV-D}3}scikit-learn vs.\ PyTorch}{6}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {V}Discussion}{6}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-A}}Cross Model Comparison}{6}{}\protected@file@percent }
+\bibcite{teboul2021}{1}
+\@writefile{lot}{\contentsline {table}{\numberline {VI}{\ignorespaces Final comparison across all model configurations}}{7}{}\protected@file@percent }
+\newlabel{tab:final-comparison}{{VI}{7}{}{table.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-B}}Hypothesis Revisited}{7}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-C}}Performance, Runtime, and Class Level Behavior}{7}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-D}}Limitations and Improvement}{7}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {VI}Conclusion}{7}{}\protected@file@percent }
+\bibcite{cortes1995}{2}
+\bibcite{he2009}{3}
+\@writefile{toc}{\contentsline {section}{References}{8}{}\protected@file@percent }
+\gdef \@abspage@last{8}
